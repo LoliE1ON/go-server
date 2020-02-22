@@ -2,9 +2,11 @@ package main
 
 import (
 	"fmt"
-	"github.com/gorilla/mux"
 	"log"
 	"net/http"
+
+	welcomeHttpHandlers "github.com/LoliE1ON/go-server/httpHandlers/welcome"
+	"github.com/gorilla/mux"
 )
 
 type ServerConfig struct {
@@ -13,12 +15,13 @@ type ServerConfig struct {
 
 func main() {
 
-	var config = ServerConfig {
+	var config = ServerConfig{
 		Port: 3500,
 	}
 
 	router := mux.NewRouter()
 	router.Use(accessControlMiddleware)
+	router.HandleFunc("/", welcomeHttpHandlers.Welcome).Methods("GET")
 
 	log.Println("Server started at port:", config.Port)
 	if err := http.ListenAndServe(fmt.Sprintf(":%d", config.Port), router); err != nil {
